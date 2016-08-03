@@ -24,7 +24,7 @@ api = Instamojo::API.new("api_key-you-received-from-api@instamojo.com", "auth_to
 ---
 ### Products
 
-`Link` object contains all the necessary information required to interpret, modify and archive an Instamojo product. All product operations on client returns one or collection of `products`. Original response from Instamojo API for a link is encapsulated in `link.original`, which is immutable. Call `#to_h` on `link` to get its all attributes.
+`Link` object contains all the necessary information required to interpret, modify and archive an Instamojo product. All product operations on client returns one or collection of `products`. Original response from Instamojo API for a product is encapsulated in `link.original`, which is immutable. Call `#to_h` on `link` to get its all attributes.
 _Helper methods_ for `Link`:
 * `link.to_h` - Returns equivalent Ruby hash for a link.
 * `link.to_json` - Returns equivalent JSON for a link
@@ -89,11 +89,11 @@ new_link.reload!
 ```
 or
 ```ruby
-new_link_params = {base_price: 199, title: 'API product 3', description: 'My dummy offer via API', currency: 'INR', quantity: 20}
-new_link = client.create_link(new_link_params)
+new_product_params = {base_price: 199, title: 'API product 3', description: 'My dummy offer via API', currency: 'INR', quantity: 20}
+new_link = client.create_link(new_product_params)
 ```
 
-#### Detail of a product
+#### Details of a product
 ```ruby
 link = client.link_detail('product_slug_goes_here')
 #=> Instamojo Link(slug: product_slug_goes_here, title: Foo Bar, shorturl: http://imojo.in/ankurfoobar)
