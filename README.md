@@ -22,9 +22,9 @@ api = Instamojo::API.new("api_key-you-received-from-api@instamojo.com", "auth_to
 `client = api.client`
 
 ---
-### Links
+### Products
 
-`Link` object contains all the necessary information required to interpret, modify and archive an Instamojo Link. All link operations on client returns one or collectionn of `links`. Original response from Instamojo API for a link is encapsulated in `link.original`, which is immutable. Call `#to_h` on `link` to get it's all attributes.
+`Link` object contains all the necessary information required to interpret, modify and archive an Instamojo product. All product operations on client returns one or collection of `products`. Original response from Instamojo API for a link is encapsulated in `link.original`, which is immutable. Call `#to_h` on `link` to get its all attributes.
 _Helper methods_ for `Link`:
 * `link.to_h` - Returns equivalent Ruby hash for a link.
 * `link.to_json` - Returns equivalent JSON for a link
@@ -34,27 +34,27 @@ _Helper methods_ for `Link`:
 * `link.reload` or `link.refresh` - Looks for changes on Instamojo server for the link. Immutable
 * `link.reload!` or `link.refresh!` - Same as `link.reload`, but mutable.
 
- More about it's usage is below.
+ More about its usage is below.
 
 
-#### Get Links
+#### Get Products
 ```ruby
 client.links_list
 #=> Array of Instamojo::Link objects
 ```
 
-#### Create a new link
+#### Create a new product
 ##### Required:
-* `title` - Title of the Link, be concise.
+* `title` - Title of the product, be concise.
 * `description` - Describe what your customers will get, you can add terms and conditions and any other relevant information here. Markdown is supported, popular media URLs like Youtube, Flickr are auto-embedded.
-* `base_price` - Price of the Link. This may be 0, if you want to offer it for free.
+* `base_price` - Price of the product. This may be 0, if you want to offer it for free.
 
 ##### File and Cover image:
 * `file_upload` - Full path to the file you want to sell. This file will be available only after successful payment.
 * `cover_image` - Full path to the IMAGE you want to upload as a cover image.
 
 ##### Quantity:
-* `quantity` - Set to 0 for unlimited sales. If you set it to say 10, a total of 10 sales will be allowed after which the Link will be made unavailable.
+* `quantity` - Set to 0 for unlimited sales. If you set it to say 10, a total of 10 sales will be allowed after which the product will be made unavailable.
 
 ##### Post Purchase Note
 * `note` - A post-purchase note, will only displayed after successful payment. Will also be included in the ticket/ receipt that is sent as attachment to the email sent to buyer. This will not be shown if the payment fails.
@@ -74,7 +74,7 @@ client.links_list
 ##### Code:
 ```ruby
 new_link = client.create_link do |link|
-  link.title = 'API link v1.1'
+  link.title = 'API product v1.1'
   link.description = 'Dummy offer via API'
   link.currency = 'INR'
   link.base_price = 0
@@ -83,43 +83,43 @@ new_link = client.create_link do |link|
   link.file_upload = '~/Pictures/RISE.jpg'
   link.cover_image = '~/Pictures/saturday.jpg'
 end
-#=> Instamojo Link(slug: api-link-v11, title: API link v1.1, shorturl: )
+#=> Instamojo Link(slug: api-product-v11, title: API product v1.1, shorturl: )
 new_link.reload!
-#=> Instamojo Link(slug: api-link-v11, title: API link v1.1, shorturl: http://imojo.in/1dxv1h)
+#=> Instamojo Link(slug: api-product-v11, title: API product v1.1, shorturl: http://imojo.in/1dxv1h)
 ```
 or
 ```ruby
-new_link_params = {base_price: 199, title: 'API link 3', description: 'My dummy offer via API', currency: 'INR', quantity: 20}
+new_link_params = {base_price: 199, title: 'API product 3', description: 'My dummy offer via API', currency: 'INR', quantity: 20}
 new_link = client.create_link(new_link_params)
 ```
 
-#### Detail of a link
+#### Detail of a product
 ```ruby
-link = client.link_detail('link_slug_goes_here')
-#=> Instamojo Link(slug: link_slug_goes_here, title: Foo Bar, shorturl: http://imojo.in/ankurfoobar)
+link = client.link_detail('product_slug_goes_here')
+#=> Instamojo Link(slug: product_slug_goes_here, title: Foo Bar, shorturl: http://imojo.in/ankurfoobar)
 link.to_h
 #=> {"title"=>"Foo Bar", "description"=>"", "slug"=>"foo-product", "shorturl"=>"http://imojo.in/ankurfoobar", "url"=>"https://www.instamojo.com/ankurgel/foo-product/", "cover_image"=> "https://www.filepicker.io/api/file/BHeefKAARCKGC5l1J29e/convert?w=500&h=500&fit=clip&quality=70", "currency"=>"INR", "base_price"=>"0.00", "quantity"=>nil, "quantity_sold"=>2, "requires_shipping"=>false, "ships_within_days"=>nil, "start_date"=>nil, "end_date"=>nil, "venue"=>"", "timezone"=>"", "note"=>"", "redirect_url"=>"", "webhook_url"=>"", "status"=>"Live", "enable_pwyw"=>false, "enable_sign"=>false, "socialpay_platforms"=>""}
 ```
 
-#### Edit a link
+#### Edit a product
 ```ruby
 link = client.links_list.first
 link.save do |l|
   l.title = "Foo"
-  l.description = "This new information should go in link"
+  l.description = "This new information should go in product"
 end
 #=> Returns updated Link object from Instamojo
 ```
 or
 ```ruby
 link = client.link_detail('foo-product')
-link.title = 'Foo'; link.description = 'This new information should go in link'
+link.title = 'Foo'; link.description = 'This new information should go in product'
 link.save
 # returns updated Link object from Instamojo
 ```
 or handle it directly without Link object
 ```ruby
-client.edit_link({slug: 'foo-product', title: 'Foo', description: 'This new infromation should go in link'})
+client.edit_link({slug: 'foo-product', title: 'Foo', description: 'This new infromation should go in product'})
 ```
 
 ---
@@ -140,7 +140,7 @@ client.payments_list
 #### Detail or status of a payment
 ```ruby
 payment = client.payment_detail('MOJxxx06000F97367750')
-#=> Instamojo Payment(payment_id: MOJxxx06000F97367750, quantity: 1, amount: 0.00, status: Credit, link_slug: api-link-7-node, buyer_name: Ankur Goel)
+#=> Instamojo Payment(payment_id: MOJxxx06000F97367750, quantity: 1, amount: 0.00, status: Credit, link_slug: api-product-7-node, buyer_name: Ankur Goel)
 payment.to_h
 #=> Hash of all payment object attributes
 ```
